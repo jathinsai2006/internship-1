@@ -1,9 +1,8 @@
-import { useRef , useState } from "react";
+import { useRef  } from "react";
 import api from "../api/api";
 
-function UploadBox() {
+function UploadBox({ setDocument }) {
   const fileInput = useRef(null);
-  const [documentInfo, setDocumentInfo] = useState(null);
   
 
   const chooseFile = () => {
@@ -21,7 +20,7 @@ function UploadBox() {
     try {
       const response = await api.post("/upload", formData);
 
-      alert("✅ " + response.data.message);
+      setDocument(response.data);
       setDocumentInfo(response.data);
 
       console.log(response.data);
