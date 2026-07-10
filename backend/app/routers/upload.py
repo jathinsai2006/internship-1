@@ -34,15 +34,17 @@ async def upload_pdf(file: UploadFile = File(...)):
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Extract text from PDF
+    # Extract text
     pdf_data = extract_text(file_path)
 
-    # Return response
+    print(pdf_data)
+
     return {
         "success": True,
         "original_filename": file.filename,
         "stored_filename": unique_filename,
         "pages": pdf_data["pages"],
         "characters": pdf_data["characters"],
+        "text": pdf_data["text"],
         "message": "PDF uploaded and processed successfully!"
     }
