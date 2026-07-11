@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.upload import router as upload_router
-
+from app.routers.chat import router as chat_router
 app = FastAPI(
     title="IntelliDocs AI",
     description="AI-powered Document Question Answering System",
@@ -23,6 +23,8 @@ app.add_middleware(
 
 # Register Upload API
 app.include_router(upload_router)
+app.include_router(chat_router)
+
 
 @app.get("/")
 def root():
