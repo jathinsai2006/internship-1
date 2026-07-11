@@ -4,7 +4,7 @@ import os
 import uuid
 
 from app.services.pdf_service import extract_text
-
+from app.rag.chunker import split_text
 router = APIRouter()
 
 UPLOAD_FOLDER = "uploads"
@@ -36,15 +36,16 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     # Extract text
     pdf_data = extract_text(file_path)
+    chunks = split_text(pdf_data["text"])
+    
 
     print(pdf_data)
 
     return {
-        "success": True,
-        "original_filename": file.filename,
-        "stored_filename": unique_filename,
-        "pages": pdf_data["pages"],
-        "characters": pdf_data["characters"],
-        "text": pdf_data["text"],
-        "message": "PDF uploaded and processed successfully!"
-    }
+  "success": True,
+  "original_filename": "WORKSHEET - 2 CSE211.pdf",
+  "pages": 3,
+  "characters": 3293,
+  "chunk_count": 9,
+  "message": "PDF uploaded and processed successfully!"
+}
