@@ -5,7 +5,7 @@ import Hero from "./components/Hero";
 import UploadBox from "./components/UploadBox";
 import FeatureCards from "./components/FeatureCards";
 import DocumentCard from "./components/DocumentCard";
-
+import ChatBox from "./components/ChatBox";
 function App() {
 
   const [document, setDocument] = useState(null);
@@ -20,6 +20,7 @@ function App() {
       <UploadBox setDocument={setDocument} />
 
       <DocumentCard document={document} />
+      <ChatBox />
 
       <FeatureCards />
 
