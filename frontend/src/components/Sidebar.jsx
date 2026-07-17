@@ -1,10 +1,7 @@
 import { useState } from "react";
 import api from "../api/api";
 
-function ChatBox({
-  recentQuestions,
-  setRecentQuestions,
-}) {
+function ChatBox() {
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,11 +24,6 @@ function ChatBox({
         },
       ]);
 
-      // Save recent questions (latest 5, no duplicates)
-      setRecentQuestions((prev) =>
-        [question, ...prev.filter((q) => q !== question)].slice(0, 5)
-      );
-
       setQuestion("");
     } catch (error) {
       console.log(error);
@@ -45,7 +37,9 @@ function ChatBox({
     <div className="max-w-5xl mx-auto mt-10 bg-slate-900 rounded-2xl border border-cyan-500 overflow-hidden shadow-xl">
 
       {/* Header */}
+
       <div className="flex justify-between items-center p-6 border-b border-cyan-500">
+
         <h2 className="text-3xl font-bold text-cyan-400">
           🤖 Ask AI
         </h2>
@@ -56,9 +50,11 @@ function ChatBox({
         >
           🗑 Clear Chat
         </button>
+
       </div>
 
       {/* Chat History */}
+
       <div className="max-h-[500px] overflow-y-auto p-6 space-y-6">
 
         {messages.length === 0 && !loading && (
@@ -74,17 +70,25 @@ function ChatBox({
         )}
 
         {messages.map((msg, index) => (
+
           <div key={index}>
 
             {/* User Message */}
+
             <div className="flex justify-end">
+
               <div className="bg-cyan-600 text-white rounded-2xl px-5 py-3 max-w-[70%] shadow-lg">
+
                 <p>{msg.question}</p>
+
               </div>
+
             </div>
 
             {/* AI Message */}
+
             <div className="flex justify-start mt-4">
+
               <div className="bg-slate-800 border border-cyan-500 rounded-2xl px-5 py-4 max-w-[80%] shadow-lg">
 
                 <p className="whitespace-pre-wrap">
@@ -102,22 +106,31 @@ function ChatBox({
                 </button>
 
               </div>
+
             </div>
 
           </div>
+
         ))}
 
         {loading && (
+
           <div className="flex justify-start">
+
             <div className="bg-slate-800 border border-cyan-500 rounded-2xl px-5 py-4 animate-pulse">
+
               🤖 AI is thinking...
+
             </div>
+
           </div>
+
         )}
 
       </div>
 
       {/* Input Area */}
+
       <div className="p-6 border-t border-cyan-500">
 
         <textarea

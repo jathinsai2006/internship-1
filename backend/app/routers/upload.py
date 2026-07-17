@@ -40,12 +40,17 @@ async def upload_pdf(file: UploadFile = File(...)):
     
 
     print(pdf_data)
+    print(chunks)
 
     return {
-  "success": True,
-  "original_filename": "WORKSHEET - 2 CSE211.pdf",
-  "pages": 3,
-  "characters": 3293,
-  "chunk_count": 9,
-  "message": "PDF uploaded and processed successfully!"
+    "success": True,
+    "original_filename": file.filename,
+    "stored_filename": unique_filename,
+    "pages": pdf_data["pages"],
+    "characters": pdf_data["characters"],
+    "chunk_count": len(chunks),
+    "embedding_model": "all-MiniLM-L6-v2",
+    "vector_database": "ChromaDB",
+    "status": "Processed Successfully",
+    "message": "PDF uploaded and processed successfully!"
 }
