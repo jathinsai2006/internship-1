@@ -27,8 +27,8 @@ QUESTION:
 """
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt,
-    )
+    model="models/gemini-3.5-flash",
+    contents=prompt
+)
 
     return response.text

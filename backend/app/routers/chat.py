@@ -13,20 +13,56 @@ class Question(BaseModel):
 
 @router.post("/ask")
 async def ask_question(data: Question):
+    try:
+        # Search vector database
+        results = search_documents(data.question)
 
-    results = search_documents(data.question)
+        documents = results["documents"]
+        metadatas = results["metadatas"]
+        distances = results["distances"]
 
-    documents = results["documents"][0]
+        if len(documents) == 0:
+            return {
+                "success": False,
+                "message": "No relevant document found."
+            }
 
-    context = "\n\n".join(documents)
+        # Combine retrieved chunks into context
+        context = "\n\n".join(documents)
 
-    answer = generate_answer(
-        context=context,
-        question=data.question
-    )
-    return {
-    "question": data.question,
-    "answer": answer,
-    "source": "Relevant Document Chunk",
-    "confidence": "High"
-}
+        answer = generate_answer(
+            context=context,
+            question=data.question
+        )
+
+        source = metadatas[0]
+
+        # Calculate confidence
+        confidence = "Low"
+
+        if len(distances) > 0:
+            score = distances[0]
+
+            if score < 0.5:
+                confidence = "High"
+            elif score < 1.0:
+                confidence = "Medium"
+
+        return {
+            "success": True,
+            "question": data.question,
+            "answer": answer,
+            "source_document": source.get("document", "Unknown"),
+            "page": source.get("page", "Unknown"),
+            "chunk": source.get("chunk", "Unknown"),
+            "confidence": confidence
+        }
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+
+        return {
+            "success": False,
+            "message": str(e)
+        }

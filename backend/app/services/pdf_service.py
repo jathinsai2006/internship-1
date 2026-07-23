@@ -1,19 +1,29 @@
 import fitz
 
+
 def extract_text(pdf_path):
     document = fitz.open(pdf_path)
 
-    text = ""
+    pages = []
 
-    for page in document:
-        text += page.get_text()
+    total_characters = 0
 
-    page_count = len(document)
+    for page_number, page in enumerate(document, start=1):
+        text = page.get_text().strip()
+
+        total_characters += len(text)
+
+        pages.append(
+            {
+                "page": page_number,
+                "text": text
+            }
+        )
 
     document.close()
 
     return {
-        "text": text,
-        "pages": page_count,
-        "characters": len(text)
+        "pages": pages,
+        "page_count": len(pages),
+        "characters": total_characters
     }
