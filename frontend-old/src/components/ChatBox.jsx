@@ -1,10 +1,8 @@
 import { useState } from "react";
 import api from "../api/api";
+import jsPDF from "jspdf";
 
-function ChatBox({
-  recentQuestions,
-  setRecentQuestions,
-}) {
+function ChatBox({ recentQuestions, setRecentQuestions }) {
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -22,8 +20,13 @@ function ChatBox({
       setMessages((prev) => [
         ...prev,
         {
-          question: question,
+          question,
           answer: response.data.answer,
+          source: response.data.source_document,
+          page: response.data.page,
+          chunk: response.data.chunk,
+          confidence: response.data.confidence,
+          time: new Date().toLocaleTimeString(),
         },
       ]);
 
@@ -41,6 +44,48 @@ function ChatBox({
     }
   };
 
+  const downloadChat = () => {
+    if (messages.length === 0) {
+      alert("No chat available to export.");
+      return;
+    }
+
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("IntelliDocs AI - Chat History", 20, 20);
+
+    let y = 35;
+
+    messages.forEach((msg, index) => {
+      doc.setFontSize(12);
+
+      doc.text(`Question ${index + 1}:`, 20, y);
+      y += 8;
+
+      const qLines = doc.splitTextToSize(msg.question, 170);
+      doc.text(qLines, 20, y);
+      y += qLines.length * 7 + 5;
+
+      doc.text("Answer:", 20, y);
+      y += 8;
+
+      const aLines = doc.splitTextToSize(msg.answer, 170);
+      doc.text(aLines, 20, y);
+      y += aLines.length * 7 + 8;
+
+      doc.text(`Time: ${msg.time}`, 20, y);
+      y += 15;
+
+      if (y > 260) {
+        doc.addPage();
+        y = 20;
+      }
+    });
+
+    doc.save("ChatHistory.pdf");
+  };
+
   return (
     <div className="max-w-5xl mx-auto mt-10 bg-slate-900 rounded-2xl border border-cyan-500 overflow-hidden shadow-xl">
 
@@ -50,12 +95,21 @@ function ChatBox({
           🤖 Ask AI
         </h2>
 
-        <button
-          onClick={() => setMessages([])}
-          className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition"
-        >
-          🗑 Clear Chat
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={downloadChat}
+            className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg transition"
+          >
+            📄 Export PDF
+          </button>
+
+          <button
+            onClick={() => setMessages([])}
+            className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg transition"
+          >
+            🗑 Clear Chat
+          </button>
+        </div>
       </div>
 
       {/* Chat History */}
@@ -89,6 +143,31 @@ function ChatBox({
 
                 <p className="whitespace-pre-wrap">
                   {msg.answer}
+                </p>
+
+                {/* Source Information */}
+                <div className="mt-4 border-t border-slate-700 pt-4 text-sm text-gray-300 space-y-2">
+
+                  <p>
+                    📄 <strong>Source:</strong> {msg.source}
+                  </p>
+
+                  <p>
+                    📑 <strong>Page:</strong> {msg.page}
+                  </p>
+
+                  <p>
+                    🧩 <strong>Chunk:</strong> {msg.chunk}
+                  </p>
+
+                  <p>
+                    🟢 <strong>Confidence:</strong> {msg.confidence}
+                  </p>
+
+                </div>
+
+                <p className="text-xs text-gray-400 mt-4">
+                  {msg.time}
                 </p>
 
                 <button

@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 
 from app.rag.retrieval import search_documents
-from app.services.gemini_service import generate_answer
+from app.services.groq_service import generate_answer
 
 router = APIRouter()
 
@@ -27,13 +27,38 @@ async def ask_question(data: Question):
                 "message": "No relevant document found."
             }
 
+        # ================= DEBUG =================
+        print("=" * 80)
+        print("QUESTION:")
+        print(data.question)
+        print("=" * 80)
+
+        print("RETRIEVED CHUNKS:")
+
+        for i, doc in enumerate(documents):
+            print(f"\n--------- CHUNK {i+1} ---------")
+            print(doc)
+
+        print("=" * 80)
+        # ========================================
+
         # Combine retrieved chunks into context
         context = "\n\n".join(documents)
 
+        print("=" * 80)
+        print("QUESTION:")
+        print(data.question)
+        print("=" * 80)
+
+        print("CONTEXT SENT TO GROQ:")
+        print(context)
+        print("=" * 80)
+
         answer = generate_answer(
+            
             context=context,
             question=data.question
-        )
+)
 
         source = metadatas[0]
 

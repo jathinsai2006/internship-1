@@ -1,1 +1,144 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans antialiased bg-surface-950 text-surface-200;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34, 211, 238, 0.10), transparent),
+      radial-gradient(ellipse 60% 50% at 100% 100%, rgba(16, 185, 129, 0.07), transparent),
+      radial-gradient(ellipse 50% 40% at 0% 60%, rgba(59, 130, 246, 0.06), transparent);
+    background-attachment: fixed;
+  }
+
+  /* Light theme overrides */
+  html:not(.dark) body {
+    @apply bg-surface-50 text-surface-700;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(34, 211, 238, 0.10), transparent),
+      radial-gradient(ellipse 60% 50% at 100% 100%, rgba(16, 185, 129, 0.06), transparent);
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface-700/60 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-surface-600;
+  }
+}
+
+@layer components {
+  /* Glassmorphism card */
+  .glass {
+    @apply bg-surface-900/60 backdrop-blur-xl border border-white/5 rounded-2xl;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+  transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  isolation: isolate;
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+    backdrop-filter: blur(20px) saturate(160%);
+  }
+
+  .glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 60%);
+    pointer-events: none;
+  }
+
+  .dark .glass {
+    @apply bg-surface-900/60 border-white/5;
+  }
+  html:not(.dark) .glass {
+    @apply bg-white/70 border-surface-200/80;
+  }
+
+  .glass-strong {
+    @apply bg-surface-900/80 backdrop-blur-2xl border border-white/10 rounded-2xl;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+  }
+  html:not(.dark) .glass-strong {
+    @apply bg-white/85 border-surface-200;
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary-400 via-secondary-400 to-accent-400 bg-clip-text text-transparent;
+  -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  .text-gradient-emerald {
+    @apply bg-gradient-to-r from-accent-400 to-primary-400 bg-clip-text text-transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  /* Sidebar nav item */
+  .nav-item {
+    @apply relative flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium
+      text-surface-400 hover:text-white hover:bg-white/5
+      transition-all duration-200 cursor-pointer;
+  }
+  .nav-item-active {
+    @apply text-white bg-primary-500/10;
+  }
+  html:not(.dark) .nav-item {
+    @apply text-surface-500 hover:text-surface-900 hover:bg-surface-100;
+  }
+  html:not(.dark) .nav-item-active {
+    @apply text-surface-900 bg-primary-500/10;
+  }
+
+  /* Skeleton shimmer */
+  .skeleton {
+    @apply rounded bg-surface-700/40;
+    background: linear-gradient(90deg, rgba(51,65,85,0.25) 25%, rgba(51,65,85,0.5) 50%, rgba(51,65,85,0.25) 75%);
+    background-size: 1000px 100%;
+    @apply animate-shimmer;
+  }
+
+  /* Gradient button */
+  .btn-gradient {
+    @apply bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-glow;
+  }
+  .btn-gradient:hover {
+    box-shadow: 0 0 28px rgba(34, 211, 238, 0.45);
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .bg-grid {
+    background-image: var(--tw-bg-grid, none);
+    background-size: 32px 32px;
+  }
+}

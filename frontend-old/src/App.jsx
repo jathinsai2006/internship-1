@@ -13,7 +13,6 @@ import RecentQuestions from "./components/RecentQuestions";
 
 function App() {
   const [document, setDocument] = useState(null);
-  const [summary, setSummary] = useState("");
   const [recentQuestions, setRecentQuestions] = useState([]);
 
   return (
@@ -41,10 +40,7 @@ function App() {
             recentQuestions={recentQuestions}
           />
 
-          <SummaryCard
-            summary={summary}
-            setSummary={setSummary}
-          />
+          <SummaryCard />
 
           <FeatureCards />
         </div>
